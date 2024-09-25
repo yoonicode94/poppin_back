@@ -45,7 +45,7 @@
     </select>
 
     <select id="jwtLogin" resultType="dev.zeronelab.mybatis.vo.MemberVO">
-        select mid
+        select *
         from
         member
         where mid = #{mid} and mpw = #{mpw}
@@ -54,4 +54,5 @@
     <select id="findMno" resultType="Long">
         select mno from member where mid = #{bwriter}
     </select>
+
 </mapper>

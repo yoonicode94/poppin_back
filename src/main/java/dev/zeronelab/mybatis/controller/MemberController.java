@@ -1,9 +1,9 @@
 package dev.zeronelab.mybatis.controller;
 
-import dev.zeronelab.mybatis.vo.MemberVO;
 import dev.zeronelab.mybatis.dto.MemberDTO;
 import dev.zeronelab.mybatis.service.MemberService;
 import dev.zeronelab.mybatis.util.JWTUtil;
+import dev.zeronelab.mybatis.vo.MemberVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
