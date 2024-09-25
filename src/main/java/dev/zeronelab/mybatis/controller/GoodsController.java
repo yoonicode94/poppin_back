@@ -1,7 +1,7 @@
 package dev.zeronelab.mybatis.controller;
 
 import dev.zeronelab.mybatis.dao.GoodsMapper;
-import dev.zeronelab.mybatis.vo.ReviewVO;
+import dev.zeronelab.mybatis.vo.ReviewEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,11 +61,11 @@ public class GoodsController {
     }
 
     @RequestMapping(value = "goods/writereview", method = RequestMethod.POST)
-    public ResponseEntity<String> writeReview(@RequestBody ReviewVO vo) throws Exception{
+    public ResponseEntity<String> writeReview(@RequestBody ReviewEntity reviewEntity) throws Exception{
 
         ResponseEntity<String> entity = null;
         try {
-            goodsMapper.writeReview(vo);
+            goodsMapper.writeReview(reviewEntity);
             entity = new ResponseEntity<String>("succ", HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();
@@ -76,12 +76,12 @@ public class GoodsController {
     }
 
     @RequestMapping(value = "goods/modifyreview/{rno}", method = RequestMethod.POST)
-    public ResponseEntity<String> modifyReview(@PathVariable Integer rno, @RequestBody ReviewVO vo) throws Exception{
+    public ResponseEntity<String> modifyReview(@PathVariable Integer rno, @RequestBody ReviewEntity reviewEntity) throws Exception{
 
         ResponseEntity<String> entity = null;
         try {
-            vo.setRno(rno);
-            goodsMapper.modifyReview(vo);
+            reviewEntity.setRno(rno);
+            goodsMapper.modifyReview(reviewEntity);
             entity = new ResponseEntity<String>("succ", HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();

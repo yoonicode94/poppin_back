@@ -5,7 +5,7 @@
 
 <mapper namespace="dev.zeronelab.mybatis.dao.MemberMapper">
 
-    <select id="idCheck" resultType="dev.zeronelab.mybatis.vo.MemberVO">
+    <select id="idCheck" resultType="dev.zeronelab.mybatis.vo.MemberEntity">
         select count(*) as count
         from
         member
@@ -13,7 +13,7 @@
         mid = #{mid}
     </select>
 
-    <select id="eamilCheck" resultType="dev.zeronelab.mybatis.vo.MemberVO">
+    <select id="eamilCheck" resultType="dev.zeronelab.mybatis.vo.MemberEntity">
         select count(*) as count
         from
         member
@@ -30,21 +30,21 @@
         #{memail1} || '@' || #{memail2})
     </insert>
 
-    <select id="selectMemberPW" resultType="dev.zeronelab.mybatis.vo.MemberVO">
+    <select id="selectMemberPW" resultType="dev.zeronelab.mybatis.vo.MemberEntity">
         select mpw
         from
         member
         where mid = #{mid}
     </select>
 
-    <select id="login" resultType="dev.zeronelab.mybatis.vo.MemberVO">
+    <select id="login" resultType="dev.zeronelab.mybatis.vo.MemberEntity">
         select mid, mpw, mname, mno
         from
         member
         where mid = #{mid}
     </select>
 
-    <select id="jwtLogin" resultType="dev.zeronelab.mybatis.vo.MemberVO">
+    <select id="jwtLogin" resultType="dev.zeronelab.mybatis.vo.MemberEntity">
         select *
         from
         member
