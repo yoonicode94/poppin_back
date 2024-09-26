@@ -3,7 +3,7 @@ package dev.zeronelab.mybatis.vo;
 import lombok.Data;
 
 @Data
-public class GoodsVO {
+public class GoodsEntity {
     private int pno;
     private int sno;
     private String pname;

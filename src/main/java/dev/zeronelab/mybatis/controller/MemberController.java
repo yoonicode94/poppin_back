@@ -1,9 +1,9 @@
 package dev.zeronelab.mybatis.controller;
 
+import dev.zeronelab.mybatis.dao.MemberMapper;
 import dev.zeronelab.mybatis.dto.MemberDTO;
-import dev.zeronelab.mybatis.service.MemberService;
 import dev.zeronelab.mybatis.util.JWTUtil;
-import dev.zeronelab.mybatis.vo.MemberVO;
+import dev.zeronelab.mybatis.vo.MemberEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class MemberController {
     private Logger logger = LoggerFactory.getLogger(MemberController.class);
 
     @Autowired
-    private MemberService memberService;
+    private MemberMapper memberMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -32,11 +32,11 @@ public class MemberController {
 
     @ResponseBody
     @RequestMapping(value = "member/idcheck", method = RequestMethod.POST)
-    public Map<String, Object> idcheck(@RequestBody MemberVO vo) throws Exception{
+    public Map<String, Object> idcheck(@RequestBody MemberEntity memberEntity) throws Exception{
 
         Map<String, Object> rtnObj = new HashMap<>();
 
-        List<MemberVO> count = memberService.idCheck(vo);
+        List<MemberEntity> count = memberMapper.idCheck(memberEntity);
 
         rtnObj.put("idcheck", count);
 
@@ -45,11 +45,11 @@ public class MemberController {
 
     @ResponseBody
     @RequestMapping(value = "member/emailCheck", method = RequestMethod.POST)
-    public Map<String, Object> emailCheck(@RequestBody MemberVO vo) throws Exception{
+    public Map<String, Object> emailCheck(@RequestBody MemberEntity memberEntity) throws Exception{
 
         Map<String, Object> rtnObj = new HashMap<>();
 
-        List<MemberVO> count = memberService.eamilCheck(vo);
+        List<MemberEntity> count = memberMapper.eamilCheck(memberEntity);
 
         rtnObj.put("eamilCheck", count);
 
@@ -57,12 +57,12 @@ public class MemberController {
     }
 
     @RequestMapping(value = "member/join", method = RequestMethod.POST)
-    public ResponseEntity<String> join(@RequestBody MemberVO vo) {
+    public ResponseEntity<String> join(@RequestBody MemberEntity memberEntity) {
 
         ResponseEntity<String> entity = null;
         try {
-            vo.setMpw(passwordEncoder.encode(vo.getMpw()));
-            memberService.join(vo);
+            memberEntity.setMpw(passwordEncoder.encode(memberEntity.getMpw()));
+            memberMapper.join(memberEntity);
             entity = new ResponseEntity<String>("succ", HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,14 +73,14 @@ public class MemberController {
 
     @ResponseBody
     @RequestMapping(value = "member/login", method = RequestMethod.POST)
-    public Map<String, Object> login(@RequestBody MemberVO vo) throws Exception{
+    public Map<String, Object> login(@RequestBody MemberEntity memberEntity) throws Exception{
 
         Map<String, Object> rtnObj = new HashMap<>();
 
-        MemberVO selectMemberPW = memberService.selectMemberPW(vo);
+        MemberEntity selectMemberPW = memberMapper.selectMemberPW(memberEntity);
 
-        if(passwordEncoder.matches(vo.getMpw(), selectMemberPW.getMpw())){
-            List<MemberVO> member = memberService.login(vo);
+        if(passwordEncoder.matches(memberEntity.getMpw(), selectMemberPW.getMpw())){
+            List<MemberEntity> member = memberMapper.login(memberEntity);
 
             rtnObj.put("login", member);
 
@@ -92,14 +92,14 @@ public class MemberController {
 
     @ResponseBody
     @RequestMapping(value = "member/jwt", method = RequestMethod.POST)
-    public Map<String, Object> jwt(@RequestBody MemberVO vo) throws Exception{
+    public Map<String, Object> jwt(@RequestBody MemberEntity memberEntity) throws Exception{
 
         Map<String, Object> rtnObj = new HashMap<>();
 
         jwtUtil = new JWTUtil();
 
-        String mid = jwtUtil.generateToken(vo.getMid());
-        String mname = jwtUtil.generateToken(vo.getMname());
+        String mid = jwtUtil.generateToken(memberEntity.getMid());
+        String mname = jwtUtil.generateToken(memberEntity.getMname());
 
         rtnObj.put("token1", mid);
         rtnObj.put("token2", mname);
@@ -130,11 +130,11 @@ public class MemberController {
 
     @ResponseBody
     @RequestMapping(value = "member/jwtLogin", method = RequestMethod.POST)
-    public Map<String, Object> jwtLogin(@RequestBody MemberVO vo) throws Exception{
+    public Map<String, Object> jwtLogin(@RequestBody MemberEntity memberEntity) throws Exception{
 
         Map<String, Object> rtnObj = new HashMap<>();
 
-        List<MemberVO> jwtLogin = memberService.jwtLogin(vo);
+        List<MemberEntity> jwtLogin = memberMapper.jwtLogin(memberEntity);
 
         rtnObj.put("jwtLogin", jwtLogin);
 

@@ -5,7 +5,7 @@
 
 <mapper namespace="dev.zeronelab.mybatis.dao.GoodsMapper">
 
-    <select id="goodsPopupList" resultType="dev.zeronelab.mybatis.vo.PopVO">
+    <select id="goodsPopupList" resultType="dev.zeronelab.mybatis.vo.PopupEntity">
         select *
         from pop
         where sno in (select pop.sno
@@ -15,20 +15,20 @@
         order by sno
     </select>
 
-    <select id="goodsList" resultType="dev.zeronelab.mybatis.vo.GoodsVO">
+    <select id="goodsList" resultType="dev.zeronelab.mybatis.vo.GoodsEntity">
         select *
         from product
         where sno = #{sno}
     </select>
 
-    <select id="goodsDetail" resultType="dev.zeronelab.mybatis.vo.GoodsVO">
+    <select id="goodsDetail" resultType="dev.zeronelab.mybatis.vo.GoodsEntity">
         select *
         from product
         where sno = #{sno}
         and pno = #{pno}
     </select>
 
-    <select id="reviewList" resultType="dev.zeronelab.mybatis.vo.ReviewVO">
+    <select id="reviewList" resultType="dev.zeronelab.mybatis.vo.ReviewEntity">
         select review.*, member.mid
         from review, member
         where review.mno = member.mno
