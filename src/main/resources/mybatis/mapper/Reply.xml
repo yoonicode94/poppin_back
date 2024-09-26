@@ -21,4 +21,8 @@
     <delete id="replyDelete">
         delete from bcomment where cno = #{cno}
     </delete>
+
+    <delete id="replyAllDelete">
+        delete from bcomment where bno = #{bno}
+    </delete>
 </mapper>
