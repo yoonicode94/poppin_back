@@ -2,10 +2,13 @@ package dev.zeronelab.mybatis.controller;
 
 import dev.zeronelab.mybatis.dao.BoardMapper;
 import dev.zeronelab.mybatis.dao.MemberMapper;
+import dev.zeronelab.mybatis.dao.ReplyMapper;
 import dev.zeronelab.mybatis.dto.BoardDTO;
 import dev.zeronelab.mybatis.vo.BoardEntity;
+import dev.zeronelab.mybatis.vo.ReplyEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import lombok.extern.log4j.Log4j2;
 
@@ -24,6 +27,9 @@ public class BoardController {
 
     @Autowired
     private MemberMapper memberMapper;
+
+    @Autowired
+    private ReplyMapper replyMapper;
 
     @GetMapping("boardList")
     public @ResponseBody Map<String, Object> boardList(){
@@ -68,11 +74,13 @@ public class BoardController {
         return "succ";
     }
 
+    @Transactional
     @PostMapping("boardDelete")
     public String boardDelete(@RequestBody Map<String, Long> request){
         //리액트에서 bno를 json형태로 전달하고 있어서 Map형식으로 받고 거기에 bno를 get으로 얻는다.
         Long bno = request.get("bno");
         log.info("삭제합니다.");
+        replyMapper.replyAllDelete(bno);
         boardMapper.boardDelete(bno);
         return "succ";
     }

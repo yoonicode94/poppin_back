@@ -20,4 +20,7 @@ public interface ReplyMapper {
     //cno를 기준으로 댓글 삭제
     public void replyDelete(Long cno);
 
+    //댓글 전부 삭제
+    public void replyAllDelete(Long bno);
+
 }
