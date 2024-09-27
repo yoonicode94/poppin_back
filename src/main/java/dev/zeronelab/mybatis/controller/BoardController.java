@@ -64,6 +64,17 @@ public class BoardController {
         entity.setMno(mno);
         log.info("Entity = "+entity);
         boardMapper.boardRegist(entity);
+
+        String[] files = entity.getFiles();
+
+        if(files == null){
+            return "succ";
+        }else{
+            for(String fullName : files){
+                boardMapper.boardAddAttach(fullName);
+            }
+        }
+
         return "succ";
     }
 

@@ -45,9 +45,9 @@
         delete from fboard where bno = #{bno}
     </delete>
 
-    <!-- 파일 첨부 -->
-    <insert id="insertAttach">
-        insert insto attach(fullname, regdate, bno)
-        values(#{fullname}, sysdate, bno)
+    <!--파일첨부-->
+    <insert id="boardAddAttach">
+        insert into ATTACH(fullname, bno, regdate) values
+        (#{fullName}, bno_seq.currval, sysdate)
     </insert>
 </mapper>

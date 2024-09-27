@@ -1,78 +1,229 @@
 package dev.zeronelab.mybatis.controller;
 
-import dev.zeronelab.mybatis.dto.UploadResultDTO;
-import lombok.extern.log4j.Log4j2;
-import net.coobird.thumbnailator.Thumbnailator;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.UUID;
+
+import dev.zeronelab.mybatis.util.MediaUtils;
+import dev.zeronelab.mybatis.util.UploadFileUtils;
+import dev.zeronelab.mybatis.vo.BoardEntity;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-@RestController
-@Log4j2
+@Controller
 public class UploadController {
 
-	@Value("${dev.popup.upload.path}")
-	private String uploadPath;
+  private static final Logger logger = LoggerFactory.getLogger(UploadController.class);
 
-	// 파일 업로드
-	@PostMapping("/uploadAjax")
-	public ResponseEntity<List<String>> uploadFile(@RequestParam("files") MultipartFile[] uploadFiles) {
-		List<String> savedFilePaths = new ArrayList<>();
+  @Value("${dev.popup.upload.path}")
+  private String uploadPath;
 
-		for (MultipartFile uploadFile : uploadFiles) {
-			if (!uploadFile.getContentType().startsWith("image/")) {
-				return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-			}
+  @RequestMapping(value = "/uploadForm", method = RequestMethod.GET)
+  public void uploadForm() {
+  }
 
-			String originalName = uploadFile.getOriginalFilename();
-			String folderPath = makeFolder();
+  @RequestMapping(value = "/uploadForm", method = RequestMethod.POST)
+  public String uploadForm(MultipartFile file, Model model) throws Exception {
 
-			String uuid = UUID.randomUUID().toString();
-			String saveName = uploadPath + File.separator + folderPath + File.separator + uuid + "_" + originalName;
-			Path savePath = Paths.get(saveName);
+    logger.info("originalName: " + file.getOriginalFilename());
+    logger.info("size: " + file.getSize());
+    logger.info("contentType: " + file.getContentType());
 
-			try {
-				// 파일 저장
-				uploadFile.transferTo(savePath);
-				savedFilePaths.add(saveName); // 저장된 파일 경로 추가
-			} catch (IOException e) {
-				e.printStackTrace();
-				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-		}
-		return new ResponseEntity<>(savedFilePaths, HttpStatus.OK);
-	}
+    String savedName = uploadFile(file.getOriginalFilename(), file.getBytes());
 
-	// 날짜별 폴더 생성
-	private String makeFolder() {
-		String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-		String folderPath = str.replace("/", File.separator);
+    model.addAttribute("savedName", savedName);
 
-		// 폴더 생성
-		File uploadPathFolder = new File(uploadPath, folderPath);
-		if (!uploadPathFolder.exists()) {
-			uploadPathFolder.mkdirs();
-		}
-		return folderPath;
-	}
+    return "uploadResult";
+  }
+
+  @RequestMapping(value = "/uploadAjax", method = RequestMethod.GET)
+  public void uploadAjax() {
+  }
+
+  private String uploadFile(String originalName, byte[] fileData) throws Exception {
+
+    UUID uid = UUID.randomUUID();
+
+    String savedName = uid.toString() + "_" + originalName;
+
+    File target = new File(uploadPath, savedName);
+
+    FileCopyUtils.copy(fileData, target);
+
+    return savedName;
+
+  }
+  
+  @ResponseBody
+  @RequestMapping(value ="/uploadAjax", method=RequestMethod.POST, 
+                  produces = "text/plain;charset=UTF-8")
+  public ResponseEntity<String> uploadAjax(MultipartFile file)throws Exception{
+    
+    logger.info("originalName: " + file.getOriginalFilename());
+    
+   
+    return 
+      new ResponseEntity<>(
+          UploadFileUtils.uploadFile(uploadPath,
+                file.getOriginalFilename(), 
+                file.getBytes()), 
+          HttpStatus.CREATED);
+  }
+  
+  
+  @ResponseBody
+  @RequestMapping("/displayFile")
+  public ResponseEntity<byte[]>  displayFile(String fileName)throws Exception{
+    
+    InputStream in = null; 
+    ResponseEntity<byte[]> entity = null;
+    
+    logger.info("FILE NAME: " + fileName);
+    
+    try{
+      
+      String formatName = fileName.substring(fileName.lastIndexOf(".")+1);
+      
+      MediaType mType = MediaUtils.getMediaType(formatName);
+      
+      HttpHeaders headers = new HttpHeaders();
+      
+      in = new FileInputStream(uploadPath+fileName);
+      
+      if(mType != null){
+        headers.setContentType(mType);
+      }else{
+
+        fileName = fileName.substring(fileName.indexOf("_")+1);
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.add("Content-Disposition", "attachment; filename=\""+
+          new String(fileName.getBytes("UTF-8"), "ISO-8859-1")+"\"");
+      }
+
+        entity = new ResponseEntity<byte[]>(IOUtils.toByteArray(in), 
+          headers, 
+          HttpStatus.CREATED);
+    }catch(Exception e){
+      e.printStackTrace();
+      entity = new ResponseEntity<byte[]>(HttpStatus.BAD_REQUEST);
+    }finally{
+      in.close();
+    }
+      return entity;    
+  }
+    
+  @ResponseBody
+  @RequestMapping(value="/deleteFile", method=RequestMethod.POST)
+  public ResponseEntity<String> deleteFile(@RequestBody String fileName){
+
+    logger.info("delete file: "+ fileName);
+
+    String formatFileName = fileName.substring(fileName.indexOf("/"), fileName.lastIndexOf('"'));
+
+    logger.info("formatFileName: "+formatFileName);
+    
+    String formatTypeName = formatFileName.substring(formatFileName.lastIndexOf(".")+1);
+
+    logger.info("formatName: "+formatTypeName);
+    
+    MediaType mType = MediaUtils.getMediaType(formatTypeName);
+
+    logger.info("mTpye: "+mType);
+
+    logger.info(uploadPath + formatFileName.replace('/', File.separatorChar));
+    if(mType != null){
+      String front = formatFileName.substring(0,12);
+      String end = formatFileName.substring(14);
+      new File(uploadPath + (front+end).replace('/', File.separatorChar)).delete();
+    }
+    
+    new File(uploadPath + formatFileName.replace('/', File.separatorChar)).delete();
+
+    
+    return new ResponseEntity<String>("deleted", HttpStatus.OK);
+  }  
+  
+  @ResponseBody
+  @RequestMapping(value="/deleteAllFiles", method=RequestMethod.POST)
+  public ResponseEntity<String> deleteFile(@RequestBody BoardEntity allFile){
+
+    String[] files = allFile.getFiles();
+
+    logger.info("delete all files: "+ files);
+
+    if(files == null || files.length == 0) {
+      return new ResponseEntity<String>("deleted", HttpStatus.OK);
+    }
+
+    for (String fileName : files) {
+      String formatName = fileName.substring(fileName.lastIndexOf(".")+1);
+      
+      MediaType mType = MediaUtils.getMediaType(formatName);
+      
+      if(mType != null){      
+        
+        String front = fileName.substring(0,12);
+        String end = fileName.substring(14);
+        new File(uploadPath + (front+end).replace('/', File.separatorChar)).delete();
+      }
+      
+      new File(uploadPath + fileName.replace('/', File.separatorChar)).delete();
+      
+    }
+    return new ResponseEntity<String>("deleted", HttpStatus.OK);
+  }  
+
 }
+//  @ResponseBody
+//  @RequestMapping(value = "/uploadAjax", 
+//                 method = RequestMethod.POST, 
+//                 produces = "text/plain;charset=UTF-8")
+//  public ResponseEntity<String> uploadAjax(MultipartFile file) throws Exception {
+//
+//    logger.info("originalName: " + file.getOriginalFilename());
+//    logger.info("size: " + file.getSize());
+//    logger.info("contentType: " + file.getContentType());
+//
+//    return 
+//        new ResponseEntity<>(file.getOriginalFilename(), HttpStatus.CREATED);
+//  }
+
+// @RequestMapping(value = "/uploadForm", method = RequestMethod.POST)
+// public void uploadForm(MultipartFile file, Model model) throws Exception {
+//
+// logger.info("originalName: " + file.getOriginalFilename());
+// logger.info("size: " + file.getSize());
+// logger.info("contentType: " + file.getContentType());
+//
+// String savedName = uploadFile(file.getOriginalFilename(), file.getBytes());
+//
+// model.addAttribute("savedName", savedName);
+//
+// }
+//
+// private String uploadFile(String originalName, byte[] fileData)throws
+// Exception{
+//
+// UUID uid = UUID.randomUUID();
+//
+// String savedName = uid.toString() + "_"+ originalName;
+//
+// File target = new File(uploadPath,savedName);
+//
+// FileCopyUtils.copy(fileData, target);
+//
+// return savedName;
+//
+// }

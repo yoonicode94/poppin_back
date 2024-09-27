@@ -24,7 +24,7 @@ ALTER TABLE MEMBER
 		);
 
 -- 게시판 테이블 생성
-CREATE TABLE popup.FBOARD (
+CREATE TABLE FBOARD (
 	bno NUMBER NOT NULL, /* 게시판 번호 */
 	mno NUMBER, /* 회원번호 */
 	btitle VARCHAR2(100), /* 제목 */
@@ -35,8 +35,8 @@ CREATE TABLE popup.FBOARD (
 	bccnt NUMBER DEFAULT 0, /* 댓글수 */
 	bwriter VARCHAR2(100) /* 작성자 */
 );
-CREATE UNIQUE INDEX popup.PK_FBOARD
-	ON popup.FBOARD (
+CREATE UNIQUE INDEX PK_FBOARD
+	ON FBOARD (
 		bno ASC
 	);
 
@@ -48,7 +48,7 @@ ALTER TABLE popup.FBOARD
 		);
 
 -- 게시판 댓글 테이블 생성
-CREATE TABLE popup.BCOMMENT (
+CREATE TABLE BCOMMENT (
 	cno NUMBER NOT NULL, /* 댓글번호 */
 	bno NUMBER, /* 게시판 번호 */
 	mno NUMBER, /* 회원번호 */
@@ -56,12 +56,12 @@ CREATE TABLE popup.BCOMMENT (
 	cdate DATE, /* 등록날짜 */
 	cwriter VARCHAR2(100) /* 작성자 */
 );
-CREATE UNIQUE INDEX popup.PK_BCOMMENT
-	ON popup.BCOMMENT (
+CREATE UNIQUE INDEX PK_BCOMMENT
+	ON BCOMMENT (
 		cno ASC
 	);
 
-ALTER TABLE popup.BCOMMENT
+ALTER TABLE BCOMMENT
 	ADD
 		CONSTRAINT PK_BCOMMENT
 		PRIMARY KEY (
@@ -69,7 +69,7 @@ ALTER TABLE popup.BCOMMENT
 		);
 
 -- 팝업스토어 테이블 생성
-CREATE TABLE popup.POP (
+CREATE TABLE POP (
 	sno NUMBER NOT NULL, /* 스토어번호 */
 	sname VARCHAR2(100), /* 스토어 이름 */
 	scon VARCHAR2(3000), /* 상세내용 */
@@ -82,12 +82,12 @@ CREATE TABLE popup.POP (
 	smap VARCHAR2(300), /* 지도 */
 	sgimg VARCHAR2(200) /* 팝업굿즈사진 */
 );
-CREATE UNIQUE INDEX popup.PK_POP
-	ON popup.POP (
+CREATE UNIQUE INDEX PK_POP
+	ON POP (
 		sno ASC
 	);
 
-ALTER TABLE popup.POP
+ALTER TABLE POP
 	ADD
 		CONSTRAINT PK_POP
 		PRIMARY KEY (
@@ -105,12 +105,12 @@ CREATE TABLE PRODUCT (
 	pimg VARCHAR2(200), /* 상품이미지 */
 	pcon VARCHAR2(3000) /* 상품상세내용 */
 );
-CREATE UNIQUE INDEX popup.PK_PRODUCT
-	ON popup.PRODUCT (
+CREATE UNIQUE INDEX PK_PRODUCT
+	ON PRODUCT (
 		pno ASC
 	);
 
-ALTER TABLE popup.PRODUCT
+ALTER TABLE PRODUCT
 	ADD
 		CONSTRAINT PK_PRODUCT
 		PRIMARY KEY (
@@ -118,7 +118,7 @@ ALTER TABLE popup.PRODUCT
 		);
 
 -- 굿즈리뷰 테이블 생성
-CREATE TABLE popup.REVIEW (
+CREATE TABLE REVIEW (
 	rno NUMBER NOT NULL, /* 리뷰번호 */
 	pno NUMBER, /* 상품번호 */
 	mno NUMBER, /* 회원번호 */
@@ -127,12 +127,12 @@ CREATE TABLE popup.REVIEW (
 	rdate DATE, /* 등록날짜 */
 	rgrade NUMBER /* 평점 */
 );
-CREATE UNIQUE INDEX popup.PK_REVIEW
-	ON popup.REVIEW (
+CREATE UNIQUE INDEX PK_REVIEW
+	ON REVIEW (
 		rno ASC
 	);
 
-ALTER TABLE popup.REVIEW
+ALTER TABLE REVIEW
 	ADD
 		CONSTRAINT PK_REVIEW
 		PRIMARY KEY (
