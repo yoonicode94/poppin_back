@@ -55,4 +55,41 @@
         select mno from member where mid = #{bwriter}
     </select>
 
+
+    <select id="selectPasswordByMno" resultType="dev.zeronelab.mybatis.vo.MemberEntity">
+        select mpw
+        from
+        member
+        where mno = #{mno}
+    </select>
+
+    <select id="infoEmailCheck" resultType="dev.zeronelab.mybatis.vo.MemberEntity">
+        select count(*) as count
+        from
+        member
+        where
+        memail = #{memail}
+        and mno != #{mno}
+    </select>
+
+    <update id="updateMemberInfo">
+        UPDATE member
+        SET
+        mpw = #{mpw},
+        mname = #{mname},
+        mcell = #{mcell},
+        memail = #{memail}
+        WHERE mno = #{mno}
+    </update>
+
+    <delete id="deleteMemberByMno" parameterType="int">
+        DELETE FROM member WHERE mno = #{mno}
+    </delete>
+
+    <select id="idAndEmailCheck" parameterType="map" resultType="dev.zeronelab.mybatis.vo.MemberEntity">
+        SELECT *
+        FROM member
+        WHERE mid = #{mid} AND memail = #{memail}
+    </select>
+
 </mapper>
