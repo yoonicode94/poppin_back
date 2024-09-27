@@ -57,7 +57,7 @@ public class BoardController {
 
         return map;
     }
-
+    @Transactional
     @PostMapping("boardRegist")
     public String boardRegist(@RequestBody BoardEntity entity) throws Exception {
         Long mno = memberMapper.findMno(entity.getBwriter());

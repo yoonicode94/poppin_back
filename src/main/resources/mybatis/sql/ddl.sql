@@ -5,16 +5,139 @@ GRANT CONNECT, RESOURCE TO POP;
 
 -- POP/pop@XE로 로그인한 후,
 -- 회원정보 테이블 생성
+CREATE TABLE MEMBER (
+	mno NUMBER NOT NULL, /* 회원번호 */
+	mid VARCHAR2(20), /* 아이디 */
+	mpw VARCHAR2(20), /* 비밀번호 */
+	mname varchar2(20), /* 이름 */
+	mdate DATE, /* 가입날짜 */
+	mpoint NUMBER, /* 포인트 */
+	mcell VARCHAR2(20), /* 전화번호 */
+	memail VARCHAR2(30), /* 이메일 */
+	mgrade NUMBER DEFAULT 1 /* 등급 */
+);
+ALTER TABLE MEMBER
+	ADD
+		CONSTRAINT PK_MEMBER
+		PRIMARY KEY (
+			mno
+		);
 
 -- 게시판 테이블 생성
+CREATE TABLE popup.FBOARD (
+	bno NUMBER NOT NULL, /* 게시판 번호 */
+	mno NUMBER, /* 회원번호 */
+	btitle VARCHAR2(100), /* 제목 */
+	bcon VARCHAR2(3000), /* 내용 */
+	bdate DATE, /* 등록날짜 */
+	bimg VARCHAR2(500), /* 이미지 */
+	bcnt NUMBER DEFAULT 0, /* 조회수 */
+	bccnt NUMBER DEFAULT 0, /* 댓글수 */
+	bwriter VARCHAR2(100) /* 작성자 */
+);
+CREATE UNIQUE INDEX popup.PK_FBOARD
+	ON popup.FBOARD (
+		bno ASC
+	);
+
+ALTER TABLE popup.FBOARD
+	ADD
+		CONSTRAINT PK_FBOARD
+		PRIMARY KEY (
+			bno
+		);
 
 -- 게시판 댓글 테이블 생성
+CREATE TABLE popup.BCOMMENT (
+	cno NUMBER NOT NULL, /* 댓글번호 */
+	bno NUMBER, /* 게시판 번호 */
+	mno NUMBER, /* 회원번호 */
+	ccon VARCHAR2(500), /* 내용 */
+	cdate DATE, /* 등록날짜 */
+	cwriter VARCHAR2(100) /* 작성자 */
+);
+CREATE UNIQUE INDEX popup.PK_BCOMMENT
+	ON popup.BCOMMENT (
+		cno ASC
+	);
+
+ALTER TABLE popup.BCOMMENT
+	ADD
+		CONSTRAINT PK_BCOMMENT
+		PRIMARY KEY (
+			cno
+		);
 
 -- 팝업스토어 테이블 생성
+CREATE TABLE popup.POP (
+	sno NUMBER NOT NULL, /* 스토어번호 */
+	sname VARCHAR2(100), /* 스토어 이름 */
+	scon VARCHAR2(3000), /* 상세내용 */
+	simg VARCHAR2(200), /* 사진 */
+	splc VARCHAR2(300), /* 장소 */
+	sdate VARCHAR2(50), /* 입장기간 */
+	scell VARCHAR2(50), /* 스토어전화번호 */
+	sres NUMBER DEFAULT 1, /* 예약유무 */
+	smedia VARCHAR2(200), /* 관련영상 */
+	smap VARCHAR2(300), /* 지도 */
+	sgimg VARCHAR2(200) /* 팝업굿즈사진 */
+);
+CREATE UNIQUE INDEX popup.PK_POP
+	ON popup.POP (
+		sno ASC
+	);
 
--- 굿즈스토어 테이블 생성
+ALTER TABLE popup.POP
+	ADD
+		CONSTRAINT PK_POP
+		PRIMARY KEY (
+			sno
+		);
 
 -- 굿즈 테이블 생성
+CREATE TABLE PRODUCT (
+	pno NUMBER NOT NULL, /* 상품번호 */
+	sno NUMBER, /* 스토어번호 */
+	pname VARCHAR2(200), /* 상품이름 */
+	pprice NUMBER, /* 가격 */
+	pdate VARCHAR2(50), /* 판매기간 */
+	pquan NUMBER, /* 판매수량 */
+	pimg VARCHAR2(200), /* 상품이미지 */
+	pcon VARCHAR2(3000) /* 상품상세내용 */
+);
+CREATE UNIQUE INDEX popup.PK_PRODUCT
+	ON popup.PRODUCT (
+		pno ASC
+	);
+
+ALTER TABLE popup.PRODUCT
+	ADD
+		CONSTRAINT PK_PRODUCT
+		PRIMARY KEY (
+			pno
+		);
+
+-- 굿즈리뷰 테이블 생성
+CREATE TABLE popup.REVIEW (
+	rno NUMBER NOT NULL, /* 리뷰번호 */
+	pno NUMBER, /* 상품번호 */
+	mno NUMBER, /* 회원번호 */
+	rcon VARCHAR2(1000), /* 내용 */
+	rimg VARCHAR2(200), /* 사진 */
+	rdate DATE, /* 등록날짜 */
+	rgrade NUMBER /* 평점 */
+);
+CREATE UNIQUE INDEX popup.PK_REVIEW
+	ON popup.REVIEW (
+		rno ASC
+	);
+
+ALTER TABLE popup.REVIEW
+	ADD
+		CONSTRAINT PK_REVIEW
+		PRIMARY KEY (
+			rno
+		);
 
 -- 각 테이블 시퀀스 생성
 CREATE SEQUENCE mno_seq
@@ -70,6 +193,7 @@ CREATE SEQUENCE rno_seq
        NOCYCLE
        NOCACHE
        NOORDER;
+
 
 -- 임시로 팝업, 굿즈 테이블 데이터 생성(관리자 모드로 추후에 구현)
 insert into pop (sno, sname, scon, simg, splc, sdate, scell, smedia, smap, sgimg)

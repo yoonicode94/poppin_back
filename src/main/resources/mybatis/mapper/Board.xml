@@ -44,4 +44,10 @@
     <delete id="boardDelete">
         delete from fboard where bno = #{bno}
     </delete>
+
+    <!-- 파일 첨부 -->
+    <insert id="insertAttach">
+        insert insto attach(fullname, regdate, bno)
+        values(#{fullname}, sysdate, bno)
+    </insert>
 </mapper>
