@@ -26,4 +26,6 @@ public interface BoardMapper {
     public void boardModify(BoardDTO dto);
 
     public void boardDelete(Long bno);
+
+    public void boardAddAttach(String fullName);
 }

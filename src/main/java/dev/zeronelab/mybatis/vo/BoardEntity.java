@@ -21,6 +21,8 @@ public class BoardEntity {
     private Long bcnt;
 
     private Long bccnt;
+
+    private String[] files;
 }
 
 

@@ -44,4 +44,9 @@
     <delete id="boardDelete">
         delete from fboard where bno = #{bno}
     </delete>
+
+    <insert id="boardAddAttach">
+        insert into ATTACH(fullname, bno, regdate) values
+        (#{fullName}, bno_seq.currval, sysdate)
+    </insert>
 </mapper>
