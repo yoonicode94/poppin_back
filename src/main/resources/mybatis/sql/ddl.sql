@@ -144,6 +144,7 @@ ALTER TABLE REVIEW
 
 -- 각 테이블 시퀀스 생성
 -- 잘 확인해보세요.
+-- 깃허브 테스트용 주석
 CREATE SEQUENCE mno_seq
        INCREMENT BY 1
        START WITH 1
