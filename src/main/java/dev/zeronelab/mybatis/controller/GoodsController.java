@@ -22,7 +22,7 @@ public class GoodsController {
 
     @RequestMapping(value = "goods/goodspopuplist", method = RequestMethod.GET)
     public Map<String, Object> goodsPopupList() throws Exception{
-
+        logger.info("리스트 거침");
         Map<String, Object> rtnObj = new HashMap<>();
 
         rtnObj.put("goodspopuplist", goodsMapper.goodsPopupList());

@@ -1,3 +1,6 @@
+-- ps) 리액트 실행이 안될 시 파일 이름 앞글자가 대문자인지 확인해보시기 바랍니다.
+--      소문자면 실행이 안됩니다.
+
 -- 1. oracle db인 경우
 -- sys 에서 권한 부여
 CREATE USER POP IDENTIFIED BY pop;
