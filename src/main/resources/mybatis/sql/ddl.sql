@@ -11,7 +11,7 @@ GRANT CONNECT, RESOURCE TO POP;
 CREATE TABLE MEMBER (
 	mno NUMBER NOT NULL, /* 회원번호 */
 	mid VARCHAR2(20), /* 아이디 */
-	mpw VARCHAR2(20), /* 비밀번호 */
+	mpw VARCHAR2(100), /* 비밀번호 */
 	mname varchar2(20), /* 이름 */
 	mdate DATE, /* 가입날짜 */
 	mpoint NUMBER, /* 포인트 */
