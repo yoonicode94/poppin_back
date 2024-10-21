@@ -12,13 +12,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("api/")
 public class PopupController {
 
     @Autowired
     private PopupMapper popupMapper;
 
-    @RequestMapping("/popup/popupList")
+    @RequestMapping("/api/popup/popupList")
     public @ResponseBody Map<String, Object> popup(){
         Map<String, Object> popMap = new HashMap<>();
 
@@ -29,7 +28,7 @@ public class PopupController {
         return popMap;
     }
 
-    @GetMapping("/popup/popupRead/{sno}")
+    @GetMapping("/api/popup/popupRead/{sno}")
     public Map<String, Object> read(@PathVariable Long sno){
         Map<String, Object> map = new HashMap<>();
 
