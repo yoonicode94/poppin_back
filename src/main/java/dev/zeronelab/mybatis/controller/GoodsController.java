@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api/")
 public class GoodsController {
 
     private Logger logger = LoggerFactory.getLogger(MemberController.class);

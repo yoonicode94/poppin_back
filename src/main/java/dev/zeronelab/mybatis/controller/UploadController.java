@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
+@RequestMapping("/api/")
 public class UploadController {
 
   private static final Logger logger = LoggerFactory.getLogger(UploadController.class);

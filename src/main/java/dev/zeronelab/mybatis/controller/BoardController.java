@@ -19,7 +19,7 @@ import java.util.Map;
 
 @RestController
 @Log4j2
-@RequestMapping("/board/")
+@RequestMapping("api/board/")
 public class BoardController {
 
     @Autowired
