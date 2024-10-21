@@ -12,6 +12,7 @@ public class MemberEntity {
     private String mname;
     private Date mdate;
     private int mpoint;
+    private String mcell;
     private String mcell1;
     private String mcell2;
     private String mcell3;
