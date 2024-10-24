@@ -16,6 +16,15 @@ public class PopupController {
 
     @Autowired
     private PopupMapper popupMapper;
+    //테스트용 컨트롤러
+    @RequestMapping("/home")
+	public Map<String, String> home() {
+		System.out.println("/*** home running2...");
+
+		Map<String, String> rtnObj = new HashMap<>();
+		rtnObj.put("home", "This is a home page.");
+		return rtnObj;
+	}
 
     @RequestMapping("/api/popup/popupList")
     public @ResponseBody Map<String, Object> popup(){
