@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-popup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-boot-popup
+  template:
+    metadata:
+      labels:
+        app: spring-boot-popup
+    spec:
+      containers:
+        - name: spring-boot-popup
+          image: 192.168.1.10:8443/popup 
+          #command: ["sh", "-c", "cd /099 && npm install && npm start"]
+          ports:
+            - containerPort: 80
