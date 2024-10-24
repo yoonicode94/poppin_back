@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+//테스트용 주석
 @RestController
 @Log4j2
 @RequestMapping("api/board/")
