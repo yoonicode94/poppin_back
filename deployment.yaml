@@ -19,7 +19,7 @@ spec:
             - containerPort: 8080
           env:
            - name: SPRING_DATASOURCE_URL
-             value: jdbc:oracle:thin:@192.168.1.101:31521:xe # oracle-xe-11g 서비스의 EXTERNAL-IP로 수정
+             value: jdbc:oracle:thin:@192.168.1.103:31521:xe # oracle-xe-11g 서비스의 EXTERNAL-IP로 수정
            - name: SPRING_DATASOURCE_USERNAME
              value: POP
            - name: SPRING_DATASOURCE_PASSWORD
