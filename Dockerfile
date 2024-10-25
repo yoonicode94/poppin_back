@@ -1,7 +1,7 @@
 FROM openjdk:11 AS int-build
 LABEL description="Java Application builder"
-RUN git clone https://github.com/tong76/popup
-WORKDIR popup
+RUN git clone https://github.com/yoonicode94/poppin_back
+WORKDIR poppin_back
 ARG CACHE_BUST=1
 RUN chmod 700 mvnw
 RUN ./mvnw clean package
