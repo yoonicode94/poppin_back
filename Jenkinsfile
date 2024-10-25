@@ -18,7 +18,7 @@ pipeline {
       steps {
         sh '''
         kubectl get service react-popup && kubectl delete -f service.yaml
-        kubectl delete -f deployment.yaml
+        kubectl get deployment spring-boot-popup && kubectl delete -f deployment.yaml
         kubectl apply -f deployment.yaml
         kubectl apply -f service.yaml
         '''
